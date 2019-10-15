@@ -1,4 +1,4 @@
-# Git-tag-auto
+# Git-Tag-Auto
 Offer possibility to automatically tag a release in a git repository
 
 ![Ecedi Agency](https://www.ecedi.fr/theme/images/logo-ecedi-top.png)
