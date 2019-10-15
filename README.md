@@ -21,7 +21,7 @@ Bash and git installed.
 In a git repository:
 
 ```bash
-chmod +x ./git-tag.sh
+chmod +x git-tag.sh
 ./git-tag.sh
 ```
 
