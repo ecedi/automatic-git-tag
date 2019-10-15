@@ -24,6 +24,7 @@ In a git repository:
 chmod +x git-tag.sh
 ./git-tag.sh
 ```
+At the end, you can push it on the remote server if needed: `git push --tags`.
 
 ## Ecedi Community Support
 
