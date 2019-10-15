@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script should be executed after a commit (.git/hooks/post-commit) or in a CI.
 
@@ -9,15 +9,23 @@
 # MINOR version when you add functionality in a backwards-compatible manner, and
 # PATCH version when you make backwards-compatible bug fixes.
 
+# Value to use if no tags found
+INITIAL_VERSION="0.1.0"
+
 echo "Starting taging process based on commit message +semver: xxxxx"
 
 #get highest tags across all branches, not just the current branch
 VERSION=`git describe --tags $(git rev-list --tags --max-count=1)`
 
-# split into array
-VERSION_BITS=(${VERSION//./ })
-
-echo "Latest version tag: $VERSION"
+if [ "$VERSION" = "" ]; then
+    echo "No version tag found... Starting with $INITIAL_VERSION !"
+    # split into array
+    VERSION_BITS=($(echo "$INITIAL_VERSION" | tr '.' '\n'))
+else
+    echo "Latest version tag: $VERSION"
+    # split into array
+    VERSION_BITS=($(echo "$VERSION" | tr '.' '\n'))
+fi
 
 #get number parts and increase last one by 1
 VNUM1=${VERSION_BITS[0]}
@@ -51,11 +59,16 @@ export BUILD_NUMBER=$GIT_COMMIT_COUNT
 #create new tag
 NEW_TAG="$VNUM1.$VNUM2.$VNUM3"
 
-echo "Updating $VERSION to $NEW_TAG"
+#only tag if commit message have version-bump-message as mentioned above
+if [ "$VERSION" = "" ]; then
+  echo "Updating to first tag $NEW_TAG"
+else
+  echo "Updating $VERSION to $NEW_TAG"
+fi
 
 #only tag if commit message have version-bump-message as mentioned above
-if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MAJOR -gt 0 ] ||  [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MINOR -gt 0 ] || [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_PATCH -gt 0 ]; then
-    echo "Tagged with $NEW_TAG (Ignoring fatal:cannot describe - this means commit is untagged) "
+if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MAJOR -gt 0 ] ||  [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MINOR -gt 0 ] || [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_PATCH -gt 0 ] || [ "$VERSION" = "" ]; then
+    echo "Tagged with $NEW_TAG !"
     git tag "$NEW_TAG"
 else
     echo "Already a tag on this commit"
