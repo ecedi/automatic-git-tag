@@ -43,9 +43,12 @@ COUNT_OF_COMMIT_MSG_HAVE_SEMVER_PATCH=`git log -1 --pretty=%B | egrep -c '\+semv
 
 if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MAJOR -gt 0 ]; then
     VNUM1=$((VNUM1+1)) 
+    VNUM2=0
+    VNUM3=0
 fi
 if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MINOR -gt 0 ]; then
     VNUM2=$((VNUM2+1)) 
+    VNUM3=0
 fi
 if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_PATCH -gt 0 ]; then
     VNUM3=$((VNUM3+1)) 
