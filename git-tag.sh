@@ -72,8 +72,7 @@ fi
 #only tag if commit message have version-bump-message as mentioned above
 if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MAJOR -gt 0 ] ||  [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MINOR -gt 0 ] || [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_PATCH -gt 0 ] || [ "$VERSION" = "" ]; then
     echo "Tagged with $NEW_TAG !"
-    COMMIT_ID=`git log --format="%H" -n 1 | head -n 1`
-    git tag -a "v${NEW_TAG}" ${COMMIT_ID} -m "${NEW_TAG}"
+    git tag "${NEW_TAG}" -m "${NEW_TAG}"
 else
     echo "Already a tag on this commit"
 fi
