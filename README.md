@@ -12,6 +12,13 @@ If you add to a commit message:
 * `+semver: feature` or `+semver: minor` it will increase the second digit.
 * `+semver: fix` or `+semver: patch` it will increase the third digit.
 
+OR 
+
+If you use the u parameter:
+* `./git-tag.sh -u breaking` or `./git-tag.sh -u major` it will increase the first one.
+* `./git-tag.sh -u feature` or `./git-tag.sh -u minor` it will increase the second digit.
+* `./git-tag.sh -u fix` or `./git-tag.sh -u patch` it will increase the third digit.
+
 ## Requirement
 
 Bash and git installed.
