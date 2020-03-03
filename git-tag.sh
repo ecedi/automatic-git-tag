@@ -12,8 +12,6 @@
 # Value to use if no tags found
 INITIAL_VERSION="0.1.0"
 
-echo "Starting taging process based on commit message +semver: xxxxx"
-
 #get highest tags across all branches, not just the current branch
 VERSION=`git describe --tags $(git rev-list --tags --max-count=1)`
 
@@ -32,26 +30,49 @@ VNUM1=${VERSION_BITS[0]}
 VNUM2=${VERSION_BITS[1]}
 VNUM3=${VERSION_BITS[2]}
 
-# Taken from gitversion
-# major-version-bump-message: '\+semver:\s?(breaking|major)'
-# minor-version-bump-message: '\+semver:\s?(feature|minor)'
-# patch-version-bump-message: '\+semver:\s?(fix|patch)'
-# get last commit message and extract the count for "semver: (major|minor|patch)"
-COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MAJOR=`git log $(git describe --tags --abbrev=0)..HEAD --oneline --pretty=%B | egrep -i -c '\+semver\s?:\s?(breaking|major)'`
-COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MINOR=`git log $(git describe --tags --abbrev=0)..HEAD --oneline --pretty=%B | egrep -i -c '\+semver\s?:\s?(feature|minor)'`
-COUNT_OF_COMMIT_MSG_HAVE_SEMVER_PATCH=`git log $(git describe --tags --abbrev=0)..HEAD --oneline --pretty=%B | egrep -i -c '\+semver\s?:\s?(fix|patch)'`
+while getopts "u:" opt
+do
+    case $opt in
+        u) echo "Starting taging process based on -u parameter"
+        if [ $OPTARG = "breaking" ||  $OPTARG = "major" ]; then
+            VNUM1=$((VNUM1+1)) 
+            VNUM2=0
+            VNUM3=0
+        fi
+        if [ $OPTARG = "feature" ||  $OPTARG = "minor" ]; then
+            VNUM2=$((VNUM2+1)) 
+            VNUM3=0
+        fi
+        if [ $OPTARG = "fix" ||  $OPTARG = "patch" ]; then
+            VNUM3=$((VNUM3+1)) 
+        fi
+        ;;
+    esac
+done
 
-if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MAJOR -gt 0 ]; then
-    VNUM1=$((VNUM1+1)) 
-    VNUM2=0
-    VNUM3=0
-fi
-if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MINOR -gt 0 ]; then
-    VNUM2=$((VNUM2+1)) 
-    VNUM3=0
-fi
-if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_PATCH -gt 0 ]; then
-    VNUM3=$((VNUM3+1)) 
+if [ -z $opt ]; then
+    echo "Starting taging process based on commit message +semver: xxxxx"
+    # Taken from gitversion
+    # major-version-bump-message: '\+semver:\s?(breaking|major)'
+    # minor-version-bump-message: '\+semver:\s?(feature|minor)'
+    # patch-version-bump-message: '\+semver:\s?(fix|patch)'
+    # get last commit message and extract the count for "semver: (major|minor|patch)"
+    COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MAJOR=`git log $(git describe --tags --abbrev=0)..HEAD --oneline --pretty=%B | egrep -i -c '\+semver\s?:\s?(breaking|major)'`
+    COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MINOR=`git log $(git describe --tags --abbrev=0)..HEAD --oneline --pretty=%B | egrep -i -c '\+semver\s?:\s?(feature|minor)'`
+    COUNT_OF_COMMIT_MSG_HAVE_SEMVER_PATCH=`git log $(git describe --tags --abbrev=0)..HEAD --oneline --pretty=%B | egrep -i -c '\+semver\s?:\s?(fix|patch)'`
+
+    if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MAJOR -gt 0 ]; then
+        VNUM1=$((VNUM1+1)) 
+        VNUM2=0
+        VNUM3=0
+    fi
+    if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MINOR -gt 0 ]; then
+        VNUM2=$((VNUM2+1)) 
+        VNUM3=0
+    fi
+    if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_PATCH -gt 0 ]; then
+        VNUM3=$((VNUM3+1)) 
+    fi
 fi
 
 # count all commits for a branch
@@ -70,10 +91,10 @@ else
 fi
 
 #only tag if commit message have version-bump-message as mentioned above
-if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MAJOR -gt 0 ] ||  [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MINOR -gt 0 ] || [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_PATCH -gt 0 ] || [ "$VERSION" = "" ]; then
+if [ $NEW_TAG != $VERSION ] || [ "$VERSION" = "" ]; then
     echo "Tagged with $NEW_TAG !"
     COMMIT_ID=`git log --format="%H" -n 1 | head -n 1`
-    git tag -a "${NEW_TAG}" ${COMMIT_ID} -m "${NEW_TAG}"
+    #git tag -a "${NEW_TAG}" ${COMMIT_ID} -m "${NEW_TAG}"
 else
     echo "Already a tag on this commit"
 fi
