@@ -34,16 +34,16 @@ while getopts "u:" opt
 do
     case $opt in
         u) echo "Starting taging process based on -u parameter"
-        if [ $OPTARG = "breaking" ||  $OPTARG = "major" ]; then
+        if [ $OPTARG = "breaking" ] || [ $OPTARG = "major" ]; then
             VNUM1=$((VNUM1+1)) 
             VNUM2=0
             VNUM3=0
         fi
-        if [ $OPTARG = "feature" ||  $OPTARG = "minor" ]; then
+        if [ $OPTARG = "feature" ] || [ $OPTARG = "minor" ]; then
             VNUM2=$((VNUM2+1)) 
             VNUM3=0
         fi
-        if [ $OPTARG = "fix" ||  $OPTARG = "patch" ]; then
+        if [ $OPTARG = "fix" ] || [ $OPTARG = "patch" ]; then
             VNUM3=$((VNUM3+1)) 
         fi
         ;;
