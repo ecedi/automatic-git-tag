@@ -94,7 +94,7 @@ fi
 if [ $NEW_TAG != $VERSION ] || [ "$VERSION" = "" ]; then
     echo "Tagged with $NEW_TAG !"
     COMMIT_ID=`git log --format="%H" -n 1 | head -n 1`
-    #git tag -a "${NEW_TAG}" ${COMMIT_ID} -m "${NEW_TAG}"
+    git tag -a "${NEW_TAG}" ${COMMIT_ID} -m "${NEW_TAG}"
 else
     echo "Already a tag on this commit"
 fi
