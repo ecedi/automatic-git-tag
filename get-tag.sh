@@ -13,7 +13,7 @@
 INITIAL_VERSION="0.1.0"
 
 #get highest tags across all branches, not just the current branch
-VERSION=`git describe --tags $(git rev-list --tags --max-count=1)`
+VERSION=`git fetch --tags && git describe --tags $(git rev-list --tags --max-count=1) | head -1`
 
 if [ "$VERSION" = "" ]; then
     echo "No version tag found... Starting with $INITIAL_VERSION !"
