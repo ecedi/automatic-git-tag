@@ -28,7 +28,11 @@ fi
 #get number parts and increase last one by 1
 VNUM1=${VERSION_BITS[0]}
 VNUM2=${VERSION_BITS[1]}
-VNUM3=${VERSION_BITS[2]}
+if [ -n "${VERSION_BITS[2]}" ]; then
+	VNUM3=${VERSION_BITS[2]}
+else
+	VNUM3=0
+fi
 
 while getopts "u:" opt
 do
