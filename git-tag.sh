@@ -61,9 +61,9 @@ if [ -z $opt ]; then
     # minor-version-bump-message: '\+semver:\s?(feature|minor)'
     # patch-version-bump-message: '\+semver:\s?(fix|patch)'
     # get last commit message and extract the count for "semver: (major|minor|patch)"
-    COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MAJOR=`git log $(git describe --tags --abbrev=0)..HEAD --oneline --pretty=%B | egrep -i -c '\+semver\s?:\s?(breaking|major)'`
-    COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MINOR=`git log $(git describe --tags --abbrev=0)..HEAD --oneline --pretty=%B | egrep -i -c '\+semver\s?:\s?(feature|minor)'`
-    COUNT_OF_COMMIT_MSG_HAVE_SEMVER_PATCH=`git log $(git describe --tags --abbrev=0)..HEAD --oneline --pretty=%B | egrep -i -c '\+semver\s?:\s?(fix|patch)'`
+    COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MAJOR=`git log $(git describe --tags --abbrev=0 --always)..HEAD --oneline --pretty=%B | egrep -i -c '\+semver\s?:\s?(breaking|major)'`
+    COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MINOR=`git log $(git describe --tags --abbrev=0 --always)..HEAD --oneline --pretty=%B | egrep -i -c '\+semver\s?:\s?(feature|minor)'`
+    COUNT_OF_COMMIT_MSG_HAVE_SEMVER_PATCH=`git log $(git describe --tags --abbrev=0 --always)..HEAD --oneline --pretty=%B | egrep -i -c '\+semver\s?:\s?(fix|patch)'`
 
     if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MAJOR -gt 0 ]; then
         VNUM1=$((VNUM1+1)) 
