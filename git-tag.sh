@@ -54,7 +54,7 @@ do
     esac
 done
 
-if [ -z $opt ]; then
+if [ $OPTIND -eq 1 ]; then
     echo "Starting taging process based on commit message +semver: xxxxx"
     # Taken from gitversion
     # major-version-bump-message: '\+semver:\s?(breaking|major)'
